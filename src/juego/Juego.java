@@ -3,7 +3,11 @@ package juego;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Juego extends JFrame{
@@ -25,20 +29,8 @@ public class Juego extends JFrame{
     static int turnosJugables;
     static HashMap<String,Integer> hm;
     
-    public static void main(String[] args) {
-        hm=new HashMap<String,Integer>();
-        
-        //ArrayList<String> Ganador = new ArrayList<>();
-        int dedo = Integer.parseInt(JOptionPane.showInputDialog("Ingrese número de dedos para jugar (Min:0 y Max:5): ", "DETERMINAR DEDOS"));
-        int turnos = Integer.parseInt(JOptionPane.showInputDialog("Ingrese número de partidas que desea jugar: ", "CANTIDAD DE PARTIDAS"));
-        turnosJugables= turnos;
-        contadorTurnos = 0;
-        Juego ventana = new Juego(dedo, contadorTurnos);
-        //contadorTurnos++;
-        
-    }
-    
-    public Juego(int dedo, int turnoContador){
+    public Juego(int dedo, int turnoContador, int turnosJug, HashMap<String,Integer> hash){
+        hm = hash;
         setSize(420, 560);
         setResizable(false);
         setTitle("D2");
@@ -48,6 +40,7 @@ public class Juego extends JFrame{
         //ReversoCartas();
         cantidadDedos = dedo;
         contadorTurnos = turnoContador;
+        turnosJugables = turnosJug;
         JOptionPane.showMessageDialog(null,
                 "Inicia el Jugador " + Turno(turno),
                 "TURNO",
@@ -98,52 +91,84 @@ public class Juego extends JFrame{
         );
         
         ManoDerecha1.addActionListener((java.awt.event.ActionEvent evt) -> {
-            btnActionPerformed(evt, ManoDerecha1);
+            try {
+                btnActionPerformed(evt, ManoDerecha1);
+            } catch (IOException ex) {
+                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         ManoDerecha1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnMouseExited(evt);
+                try {
+                    btnMouseExited(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
         ManoDerecha2.addActionListener((java.awt.event.ActionEvent evt) -> {
-            btnActionPerformed(evt, ManoDerecha2);
+            try {
+                btnActionPerformed(evt, ManoDerecha2);
+            } catch (IOException ex) {
+                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         ManoDerecha2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnMouseExited(evt);
+                try {
+                    btnMouseExited(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
         ManoIzquierda1.addActionListener((java.awt.event.ActionEvent evt) -> {
-            btnActionPerformed(evt, ManoIzquierda1);
+            try {
+                btnActionPerformed(evt, ManoIzquierda1);
+            } catch (IOException ex) {
+                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         ManoIzquierda1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnMouseExited(evt);
+                try {
+                    btnMouseExited(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
         ManoIzquierda2.addActionListener((java.awt.event.ActionEvent evt) -> {
-            btnActionPerformed(evt, ManoIzquierda2);
+            try {
+                btnActionPerformed(evt, ManoIzquierda2);
+            } catch (IOException ex) {
+                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         ManoIzquierda2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnMouseExited(evt);
+                try {
+                    btnMouseExited(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
     }
     
-    private void btnActionPerformed(ActionEvent evt, Mano btn) {                                      
+    private void btnActionPerformed(ActionEvent evt, Mano btn) throws IOException {                                      
         btnEnabled(btn);
     }
     
-    private void btnEnabled(Mano btn) {
+    private void btnEnabled(Mano btn) throws IOException {
         //Si aún no se seleccionó una mano antes
         if(!manoSeleccionada) {
             //Desactivamos la mano ya que no puede atacarse a si misma
@@ -168,7 +193,7 @@ public class Juego extends JFrame{
         adicionar();
     }
     
-    private void pregwin() {
+    private void pregwin() throws IOException {
         if(ManoDerecha1.getDedos() == 0 && ManoIzquierda1.getDedos() == 0) {
             JOptionPane.showMessageDialog(this, "GANO JUGADOR NÚMERO 2", "GANADOR!!",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -177,7 +202,7 @@ public class Juego extends JFrame{
             hm.put("PARTIDA " + (contadorTurnos + 1) , 2);
             contadorTurnos++;
             if (verificacion()){
-                Juego ventana = new Juego(cantidadDedos, contadorTurnos);
+                Juego ventana = new Juego(cantidadDedos, contadorTurnos, turnosJugables, hm);
             }
             
         }
@@ -188,12 +213,12 @@ public class Juego extends JFrame{
             hm.put("PARTIDA " + (contadorTurnos + 1) , 1);
             contadorTurnos++;
             if (verificacion()){
-                Juego ventana = new Juego(cantidadDedos, contadorTurnos);
+                Juego ventana = new Juego(cantidadDedos, contadorTurnos, turnosJugables, hm);
             }
         }
     }
     
-    private boolean verificacion() {
+    private boolean verificacion() throws IOException {
         String resultados="";
         int[] punto = {0,0};
         String ganador;
@@ -218,12 +243,13 @@ public class Juego extends JFrame{
                 "FINALMENTE LOS RESULTADOS SON \n" + resultados + "\n RESULTADO GANADOR: " + ganador,
                 "GANADOR",
                 JOptionPane.INFORMATION_MESSAGE);
+            writeArray(hm);
             return false;
         }
         return true;
     }
     
-    private void adicionar() {
+    private void adicionar() throws IOException {
         //Desactivar las que no son de sus manos
         //entonces turno=false(0) es equipo 1 y si primeraMano es true entonces tienen
         //que estar actvivadas los de la manoderecha1 y manoizquierda1
@@ -264,7 +290,7 @@ public class Juego extends JFrame{
         pregwin();
     }
     
-    private void btnMouseExited(MouseEvent evt) {                                   
+    private void btnMouseExited(MouseEvent evt) throws IOException {                                   
         // TODO add your handling code here:
         adicionar();
     }
@@ -280,6 +306,28 @@ public class Juego extends JFrame{
         int num = aleatorio.nextInt(1-0+1)+0;
         return num == 1;
     }
+    
+    private static void writeArray(HashMap<String,Integer> mapa) throws IOException {
+        FileWriter fr;
+        int[] punto = {0,0};
+        String ganador;
+        String resultados="";
+        try{
+            fr=new FileWriter("resultados.txt");
+            for (String key: hm.keySet()) {
+                resultados = "\n" + key+ " -> " + hm.get(key) + resultados;
+                fr.write("\n");
+                //fout.write("<br />");
+            }
+            if (punto[0]>punto[1]){
+                ganador = "JUGADOR 1";
+            } else if (punto[0]<punto[1]){
+                ganador = "JUGADOR 2";
+            } else {
+                ganador = "EMPATE";
+            }
+            fr.write("FINALMENTE LOS RESULTADOS SON \n" + resultados + "\n RESULTADO GANADOR: " + ganador);
+            fr.close();
+        }catch(IOException ex){}
+    }
 }
-
-
